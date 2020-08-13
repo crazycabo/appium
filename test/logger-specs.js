@@ -2,27 +2,27 @@
 
 import { init as logsinkInit, clear as logsinkClear } from '../lib/logsink';
 import sinon from 'sinon';
-import { getLogger } from 'appium-logger';
+import { logger } from 'appium-support';
 
 
 // temporarily turn on logging to stdio, so we can catch and query
-let forceLogs = process.env._FORCE_LOGS;
+const forceLogs = process.env._FORCE_LOGS;
 process.env._FORCE_LOGS = 1;
-let logger = getLogger('Appium');
+const log = logger.getLogger('Appium');
 
-describe('Logger', () => {
+describe('logging', function () {
   let stderrSpy;
   let stdoutSpy;
-  beforeEach(() => {
+  beforeEach(function () {
     stderrSpy = sinon.spy(process.stderr, 'write');
     stdoutSpy = sinon.spy(process.stdout, 'write');
     logsinkClear();
   });
-  afterEach(() => {
+  afterEach(function () {
     stderrSpy.restore();
     stdoutSpy.restore();
   });
-  after(() => {
+  after(function () {
     process.env._FORCE_LOGS = forceLogs;
   });
 
@@ -31,12 +31,12 @@ describe('Logger', () => {
   const debugMsg = 'some debug';
 
   function doLogging () {
-    logger.error(errorMsg);
-    logger.warn(warnMsg);
-    logger.debug(debugMsg);
+    log.error(errorMsg);
+    log.warn(warnMsg);
+    log.debug(debugMsg);
   }
 
-  it('should send error, info and debug when loglevel is debug', async () => {
+  it('should send error, info and debug when loglevel is debug', async function () {
     await logsinkInit({loglevel: 'debug'});
 
     doLogging();
@@ -48,7 +48,7 @@ describe('Logger', () => {
     stdoutSpy.args[0][0].should.include(warnMsg);
     stdoutSpy.args[1][0].should.include(debugMsg);
   });
-  it('should send error and info when loglevel is info', async () => {
+  it('should send error and info when loglevel is info', async function () {
     await logsinkInit({loglevel: 'info'});
 
     doLogging();
@@ -59,7 +59,7 @@ describe('Logger', () => {
     stdoutSpy.callCount.should.equal(1);
     stdoutSpy.args[0][0].should.include(warnMsg);
   });
-  it('should send error when loglevel is error', async () => {
+  it('should send error when loglevel is error', async function () {
     await logsinkInit({loglevel: 'error'});
 
     doLogging();

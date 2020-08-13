@@ -8,7 +8,7 @@ Note that no matter how you contribute, your participation is governed by our
 ### Make changes to the Appium code or docs
 
 Fork the project, make a change, and send a pull request! Please have a look at
-our [Style Guide](/docs/en/contributing-to-appium/style-guide-2.0.md) before
+our [Style Guide](/docs/en/contributing-to-appium/style-guide.md) before
 getting to work.  Please make sure the unit and functional tests pass before
 sending a pull request; for more information on how to run tests, keep reading!
 
@@ -24,7 +24,7 @@ project, how Appium is architected, how to make changes to modules, and so on.
 
 Finally, before we accept your code, you will need to have signed our
 [Contributor License
-Agreement](https://docs.google.com/forms/d/1lOfXRw_0VCk7gYzjj4WLetGu7yelDVo5LWh0z7pGftE/viewform).
+Agreement](https://cla.js.foundation/appium/appium).
 
 ### Become an Appium Triager
 
@@ -60,11 +60,4 @@ are any questions that you can answer.
 ### Submit bug reports or feature requests
 
 Just use the GitHub issue tracker to submit your bug reports and feature
-requests. If you are submitting a bug report, please remember to include:
-
-* Your complete Appium log (as a [gist](https://gist.github.com)---do *NOT* paste the whole thing into the issue description). This will tell us the exact version of Appium and the exact capabilities you are using, so you don't have to.
-* Your relevant client code, if you are able to share it (again a gist is most useful).
-* Any other information helpful in trying to reproduce your issue.
-
-In general, the less work we have to do to reproduce a bug, the faster we will
-fix it. So please include as much information as possible up front!
+requests. If you are submitting a bug report, please follow the [issue template](https://github.com/appium/appium/issues/new).

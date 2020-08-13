@@ -3,7 +3,7 @@
 ### Preparing your app for test (iOS)
 
 Test apps run on the simulator have to be compiled specifically for the
-simulator, for example by executing the following command in the Xcode project:
+simulator, for example by executing the following command in the Xcode project (you can use `xcodebuild -showsdks` to see the list of available SDKs):
 
     > xcodebuild -sdk iphonesimulator6.0
 
@@ -19,11 +19,15 @@ unpack it for you. Nice if you're not using Appium locally.
 Nothing in particular needs to be done to run your .apk using Appium. If you
 want to zip it up, you can.
 
+### Preparing your app for test (Windows)
+
+Nothing in particular needs to be done to run your test.
+
 ### Running your test app with Appium (iOS)
 
 The best way to see what to do currently is to look at the example tests:
 
-[Node.js](https://github.com/appium/sample-code/tree/master/sample-code/examples/node) | [Python](https://github.com/appium/sample-code/tree/master/sample-code/examples/python) | [PHP](https://github.com/appium/sample-code/tree/master/sample-code/examples/php) | [Ruby](https://github.com/appium/sample-code/tree/master/sample-code/examples/ruby) | [Java](https://github.com/appium/sample-code/tree/master/sample-code/examples/java)
+[Node.js](https://github.com/appium/appium/tree/master/sample-code/javascript-webdriverio) | [Python](https://github.com/appium/appium/tree/master/sample-code/python) | [PHP](https://github.com/appium/appium/tree/master/sample-code/php) | [Ruby](https://github.com/appium/appium/tree/master/sample-code/ruby) | [Java](https://github.com/appium/appium/tree/master/sample-code/java)
 
 Basically, first make sure Appium is running:
 
@@ -90,12 +94,8 @@ all set now!
 First, make sure you have one and only one Android emulator or device
 connected. If you run `adb devices`, for example, you should see one device
 connected. This is the device Appium will use for tests. Of course, to have
-a device connected, you'll need to have made an Android AVD (see system
-setup ([Windows](https://github.com/appium/appium/blob/master/docs/en/appium-setup/running-on-windows.md),
-[Mac](https://github.com/appium/appium/blob/master/docs/en/appium-setup/running-on-osx.md),
-or [Linux](https://github.com/appium/appium/blob/master/docs/en/appium-setup/running-on-linux.md))
-for more information). If the Android SDK tools are on your path, you can
-simply run:
+a device connected, you'll need to have made an Android AVD. If the Android SDK
+tools are on your path, you can simply run:
 
     emulator -avd <MyAvdName>
 
@@ -193,78 +193,9 @@ capabilities and connect to the server running at port 4723 of localhost (or
 whatever host and port you specified when you started Appium). You should be
 all set now!
 
-### Running your test app with Appium (Android devices &lt; 4.2, and hybrid tests)
 
-Android devices before version 4.2 (API Level 17) do not have Google's
-[UiAutomator framework](http://developer.android.com/tools/testing-support-library/index.html#UIAutomator)
-installed. This is what Appium uses to perform the automation behaviors on
-the device. For earlier devices or tests of hybrid (webview-based) apps,
-Appium comes bundled with another automation backend called [Selendroid]
-(http://selendroid.io/).
+### Running your test app with Appium (Windows)
 
-To use Selendroid, all that is required is to slightly change the set of
-desired capabilities mentioned above, by adding the `automationName` capability
-and specifying the Selendroid automation backend. It is usually the case that you
-also need to use a `.` before your activity name (e.g., `.MainActivity` instead
-of `MainActivity` for your `appActivity` capability).
+Simply ensure that Appium is listening, and run your test with your test runner of choice.
 
-```javascript
-// javascript
-{
-    automationName: 'Selendroid',
-    platformName: 'Android',
-    platformVersion: '2.3',
-    deviceName: 'Android Emulator',
-    app: myApp,
-    appPackage: 'com.mycompany.package',
-    appActivity: '.MainActivity'
-}
-```
-
-```python
-# python
-{
-    'automationName': 'Selendroid',
-    'platformName': 'Android',
-    'platformVersion': '2.3',
-    'deviceName': 'Android Emulator',
-    'app': myApp,
-    'appPackage': 'com.mycompany.package',
-    'appActivity': '.MainActivity'
-}
-```
-
-```php
-// php
-public static $browsers = array(
-    array(
-        'desiredCapabilities' => array(
-            'automationName' => 'Selendroid',
-            'platformName' => 'Android',
-            'platformVersion' => '2.3',
-            'deviceName' => 'Android Emulator',
-            'app' => $myApp,
-            'appPackage' => 'com.mycompany.package',
-            'appActivity'=> '.MainActivity'
-        )
-    )
-);
-```
-
-```java
-// java
-DesiredCapabilities capabilities = new DesiredCapabilities();
-capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "Selendroid");
-capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
-capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "2.3");
-capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Android Emulator");
-capabilities.setCapability(MobileCapabilityType.APP, myApp);
-capabilities.setCapability(MobileCapabilityType.APP_PACKAGE: "com.mycompany.package");
-capabilities.setCapability(MobileCapabilityType.APP_ACTIVITY: ".MainActivity");
-```
-
-Now Appium will start up a Selendroid test session instead of the default test
-session. One of the downsides to using Selendroid is that its API differs
-sometimes significantly with Appium's. Therefore we recommend you thoroughly
-read [Selendroid's documentation](http://selendroid.io/native.html) before
-writing your scripts for older devices or hybrid apps.
+See our [samples](https://github.com/Microsoft/WinAppDriver/tree/master/Samples) for details.

@@ -1,6 +1,6 @@
 # Appium server arguments
 
-Many Appium 1.5 server arguments have been deprecated in favor of the [--default-capabilities flag](/docs/en/writing-running-appium/default-capabilities-arg.md).
+Since Appium 1.5, many server arguments have been deprecated in favor of the [--default-capabilities flag](/docs/en/writing-running-appium/default-capabilities-arg.md).
 
 Usage: `node . [flags]`
 
@@ -14,9 +14,11 @@ All flags are optional, but some are required in conjunction with certain others
 |Flag|Default|Description|Example|
 |----|-------|-----------|-------|
 |`--shell`|null|Enter REPL mode||
+|`--allow-cors`|false|Turn on CORS compatibility mode, which will allow connections to the Appium server from within websites hosted on any domain. Be careful when enabling this feature, since there is a potential security risk if you visit a website that uses a cross-domain request to initiate or introspect sessions on your running Appium server.||
 |`--ipa`|null|(IOS-only) abs path to compiled .ipa file|`--ipa /abs/path/to/my.ipa`|
 |`-a`, `--address`|0.0.0.0|IP Address to listen on|`--address 0.0.0.0`|
 |`-p`, `--port`|4723|port to listen on|`--port 4723`|
+|`-pa`, `--base-path`|/wd/hub|Initial path segment where the Appium/WebDriver API will be hosted. Every endpoint will be behind this segment.|`--base-path /my/path/prefix`|
 |`-ca`, `--callback-address`|null|callback IP Address (default: same as --address)|`--callback-address 127.0.0.1`|
 |`-cp`, `--callback-port`|null|callback port (default: same as port)|`--callback-port 4723`|
 |`-bp`, `--bootstrap-port`|4724|(Android-only) port to use on device to talk to Appium|`--bootstrap-port 4724`|
@@ -24,7 +26,7 @@ All flags are optional, but some are required in conjunction with certain others
 |`--session-override`|false|Enables session override (clobbering)||
 |`-l`, `--pre-launch`|false|Pre-launch the application before allowing the first session (Requires --app and, for Android, --app-pkg and --app-activity)||
 |`-g`, `--log`|null|Also send log output to this file|`--log /path/to/appium.log`|
-|`--log-level`|debug|log level; default (console[:file]): debug[:debug]|`--log-level debug`|
+|`--log-level`|debug|Set the server log level for console and logfile (specified as `console-level:logfile-level`, with both being the same if only one value is supplied). Possible values are `debug`, `info`, `warn`, `error`, which are progressively less verbose.|`--log-level error:debug`|
 |`--log-timestamp`|false|Show timestamps in console output||
 |`--local-timezone`|false|Use local timezone for timestamps||
 |`--log-no-colors`|false|Do not use colors in console output||
@@ -38,7 +40,6 @@ All flags are optional, but some are required in conjunction with certain others
 |`--nodeconfig`|null|Configuration JSON file to register appium with selenium grid|`--nodeconfig /abs/path/to/nodeconfig.json`|
 |`-ra`, `--robot-address`|0.0.0.0|IP Address of robot|`--robot-address 0.0.0.0`|
 |`-rp`, `--robot-port`|-1|port for robot|`--robot-port 4242`|
-|`--selendroid-port`|8080|Local port used for communication with Selendroid|`--selendroid-port 8080`|
 |`--chromedriver-port`|9515|Port upon which ChromeDriver will run|`--chromedriver-port 9515`|
 |`--chromedriver-executable`|null|ChromeDriver executable full path||
 |`--show-config`|false|Show info about the appium server configuration and exit||
@@ -52,11 +53,12 @@ All flags are optional, but some are required in conjunction with certain others
 |`--async-trace`|false|Add long stack traces to log entries. Recommended for debugging only.||
 |`--webkit-debug-proxy-port`|27753|(IOS-only) Local port used for communication with ios-webkit-debug-proxy|`--webkit-debug-proxy-port 27753`|
 |`-dc`, `--default-capabilities`|{}|Set the default desired capabilities, which will be set on each session unless overridden by received capabilities.|`--default-capabilities [ '{"app": "myapp.app", "deviceName": "iPhone Simulator"}' | /path/to/caps.json ]`|
+|`--reboot`|false| - (Android-only) reboot emulator after each session and kill it at the end||
 |`--command-timeout`|60|[DEPRECATED] No effect. This used to be the default command timeout for the server to use for all sessions (in seconds and should be less than 2147483). Use newCommandTimeout cap instead||
 |`-k`, `--keep-artifacts`|false|[DEPRECATED] - no effect, trace is now in tmp dir by default and is cleared before each run. Please also refer to the --trace-dir flag.||
 |`--platform-name`|null|[DEPRECATED] - Name of the mobile platform: iOS, Android, or FirefoxOS|`--platform-name iOS`|
 |`--platform-version`|null|[DEPRECATED] - Version of the mobile platform|`--platform-version 7.1`|
-|`--automation-name`|null|[DEPRECATED] - Name of the automation tool: Appium or Selendroid|`--automation-name Appium`|
+|`--automation-name`|null|[DEPRECATED] - Name of the automation tool: Appium, XCUITest, etc.|`--automation-name Appium`|
 |`--device-name`|null|[DEPRECATED] - Name of the mobile device to use|`--device-name iPhone Retina (4-inch), Android Emulator`|
 |`--browser-name`|null|[DEPRECATED] - Name of the mobile browser: Safari or Chrome|`--browser-name Safari`|
 |`--app`|null|[DEPRECATED] - IOS: abs path to simulator-compiled .app file or the bundle_id of the desired target on device; Android: abs path to .apk file|`--app /abs/path/to/my.app`|
@@ -90,3 +92,7 @@ All flags are optional, but some are required in conjunction with certain others
 |`--keep-keychains`|false|[DEPRECATED] - (iOS-only) Whether to keep keychains (Library/Keychains) when reset app between sessions||
 |`--localizable-strings-dir`|en.lproj|[DEPRECATED] - (IOS-only) the relative path of the dir where Localizable.strings file resides |`--localizable-strings-dir en.lproj`|
 |`--show-ios-log`|false|[DEPRECATED] - (IOS-only) if set, the iOS system log will be written to the console||
+|`--relaxed-security`|false|Disable additional security checks, so it is possible to use some advanced features, provided by drivers supporting this option. Only enable it if all the clients are in the trusted network and it is not the case if a client could potentially break out of the session sandbox. Can override enabling of specific features with --deny-insecure. See also the [security doc](/docs/en/writing-running-appium/security.md)||
+|`--allow-insecure`|[]|Allow a list of features which are considered insecure and must be turned on explicitly by system administrators. Feature names are documented by the relevant server/driver. Should be a comma-separated list, or a path to a filename containing one feature name per line. Features listed in --deny-insecure will override anything listed here. Does not make sense to use in conjunction with --relaxed-security. See also the [security doc](/docs/en/writing-running-appium/security.md)|`--allow-insecure=foo,bar`|
+|`--deny-insecure`|[]|Specify a list of features which will never be allowed to run, even if --relaxed-security is turned on, and even if feature names are listed with --allow-insecure. Should be a comma-separated list, or a path to a filename containing one feature name per line. See also the [security doc](/docs/en/writing-running-appium/security.md)|`--deny-insecure=foo,bar`|
+|`--log-filters`|null|Specify a full path to a JSON file containing one or more log filtering rules. This feature is useful for cases when it is necessary to obfuscate sensitive information, which may be present in server log records, like passwords or access tokens. The format of each rule is described in https://github.com/appium/appium-support/blob/master/lib/log-internal.js. An exception will be thrown on server startup if any of the rules has issues.|`--log-filters=/home/config.json`|

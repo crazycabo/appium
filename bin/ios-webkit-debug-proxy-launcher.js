@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
+/* eslint no-console:0 */
+
 /*
- * Small tool, launching and monitoring ios-web-kit-proxy, and relauching
+ * Small tool, launching and monitoring ios-web-kit-proxy, and relaunching
  * on predefined errors.
  *
  * Usage:
@@ -16,50 +18,50 @@
  *     brew install --HEAD ideviceinstaller
  */
 
-"use strict";
+'use strict';
 
-var spawn = require('child_process').spawn,
-    _ = require('lodash');
+const spawn = require('child_process').spawn;
+const _ = require('lodash');
 
-var args = process.argv.slice(2);
+const args = process.argv.slice(2);
 
-var RESTART_ON_MESSAGES = [
+const RESTART_ON_MESSAGES = [
   'Invalid message _rpc_applicationUpdated',
   'Invalid message _rpc_applicationSentListing'];
 
-var PROXY_CMD = 'ios_webkit_debug_proxy';
-var proxy;
+const PROXY_CMD = 'ios_webkit_debug_proxy';
+let proxy;
 
-var handleKillProcess = function (exitCode) {
+const handleKillProcess = function (exitCode) {
   console.log('\nKilling proxy process!');
   proxy.kill('SIGTERM');
   process.exit((exitCode || 0));
 };
 
-var startProxy = function () {
-  console.log('RUNNING:', PROXY_CMD, args.join(' '));
+const startProxy = function () {
+  console.log(`RUNNING: ${PROXY_CMD} ${args.join(' ')}`);
 
   proxy = spawn(PROXY_CMD, args);
 
-  proxy.stdout.on('data', function (data) {
-    console.log('stdout: ' + data);
+  proxy.stdout.on('data', function onStdout (data) {
+    console.log(`stdout: ${data}`);
   });
 
-  proxy.stderr.on('data', function (data) {
-    console.log('stderr: ' + data);
-    var restartMessage = _(RESTART_ON_MESSAGES).find(function (message) {
-       return ('' + data).indexOf(message) >= 0;
+  proxy.stderr.on('data', function onStderr (data) {
+    console.log(`stderr: ${data}`);
+    const restartMessage = _(RESTART_ON_MESSAGES).find(function findMessage (message) {
+      return ('' + data).indexOf(message) >= 0;
     });
     if (restartMessage) {
-      console.log('Detected error message:', restartMessage);
+      console.log(`Detected error message: ${restartMessage}`);
       console.log('Killing proxy!');
       proxy.kill('SIGTERM');
       process.nextTick(startProxy);
     }
   });
 
-  proxy.on('close', function (code) {
-    console.log('child process exited with code ' + code);
+  proxy.on('close', function onClose (code) {
+    console.log(`Child process exited with code ${code}`);
   });
 };
 

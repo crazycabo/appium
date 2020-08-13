@@ -13,6 +13,14 @@ These APIs allow you to build up arbitrary gestures with multiple actuators.
 Please see the Appium client docs for your language in order to find examples
 of using this API.
 
+**Note for W3C actions**
+
+[W3C actions](https://www.w3.org/TR/webdriver1/#actions) is also available in some drivers such as XCUITest, UIA2, Espresso and Windows.
+W3C actions are implemented to the best of the limitations of the operating systems' test frameworks.
+e.g. WDA cannot handle zero wait [PR](https://github.com/appium/appium-xcuitest-driver/pull/753).
+
+[API doc](http://appium.io/docs/en/commands/interactions/actions/) and API docs of each client help to understand how to call them.
+
 ### An Overview of the TouchAction / MultiAction API
 
 ### TouchAction
@@ -44,33 +52,21 @@ to another position, and removing their finger from the screen.
 Appium performs the events in sequence. You can add a `wait` event to control
 the timing of the gesture.
 
-`moveTo` coordinates are *relative* to the current position. For example, dragging from
+`moveTo` coordinates are now *absolute* to the current position. For example, dragging from
 100,100 to 200,200 can be achieved by:
 ```
 .press(100,100) // Start at 100,100
-.moveTo(100,100) // Increase X & Y by 100 each, ending up at 200,200
+.moveTo(200,200) // Passing absolute values of 200,200 ending up at 200,200
 
 ```
 
 The appium client libraries have different ways of implementing this, for example:
 you can pass in coordinates or an element to a `moveTo` event. Passing both
 coordinates _and_ an element will treat the coordinates as relative to the
-element's position, rather than relative to the current position.
+element's position, rather than absolute.
 
 Calling the `perform` event sends the entire sequence of events to appium,
 and the touch gesture is run on your device.
-
-Appium clients also allow one to directly execute a TouchAction through the
-driver object, rather than calling the `perform` event on the TouchAction
-object.
-
-In pseudocode, both of the following are equivalent:
-
-```center
-TouchAction().tap(el).perform()
-
-driver.perform(TouchAction().tap(el))
-```
 
 ### MultiTouch
 
@@ -117,7 +113,7 @@ To scroll, pass direction in which you intend to scroll as parameter.
 
 ```javascript
 // javascript
-driver.execute("mobile: scroll", [{direction: 'down'}])
+driver.execute('mobile: scroll', {direction: 'down'});
 ```
 
 ```java
@@ -154,7 +150,7 @@ Sample to scroll using direction and element.
 
 ```javascript
 // javascript
-driver.execute("mobile: scroll", [{direction: 'down', element: element.value}]);
+driver.execute('mobile: scroll', {direction: 'down', element: element.value.ELEMENT});
 ```
 
 ```java
@@ -188,6 +184,14 @@ scrollObject.Add("element", <element_id>);
 $params = array(array('direction' => 'down', 'element' => element.GetAttribute("id")));
 $driver->executeScript("mobile: scroll", $params);
 ```
+
+**Swiping**
+
+This is an XCUITest driver specific method that is similar to scrolling (for reference, see
+https://developer.apple.com/reference/xctest/xcuielement).
+
+This method has the same API as [Scrolling](#scrolling), just replace "mobile: scroll"
+with "mobile: swipe"
 
 **Automating Sliders**
 
